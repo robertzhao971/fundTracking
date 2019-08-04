@@ -9,26 +9,26 @@ const serviceAccount = require('./fund-site-db-0fdeaa1f172b.json');
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
-var db = admin.firestore();
+const db = admin.firestore();
 
 const axiosInstance = axios.create({
   headers: {'User-Agent': 
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
   });
 
-var getToday = () => {
+const getToday = () => {
   return dayjs().format('YYYY-MM-DD');
 }
 
-var parseHTMLForPrice = (data : string): number => {
+const parseHTMLForPrice = (data : string): number => {
   let $ = cheerio.load(data);
-  let fundPrice = $('span.change', '.primary-data-content').text().match(/[0-9]{2}\.[0-9]{2}/);
+  let fundPrice = $('span.change', '.primary-data-content').text().match(/[0-9]+\.[0-9]{2}/);
   if (fundPrice) return Number(fundPrice[0]);
   return NaN;
   }
 
-async function fetchPrice(fundPriceURL : string) {
-  const response = await axiosInstance.get(fundPriceURL);
+const fetchPrice = async (fundPriceURL : string) => {
+  let response = await axiosInstance.get(fundPriceURL);
   let fundPrice = parseHTMLForPrice(response['data']);
   if(isNaN(fundPrice)){
     throw "ERROR FETCHING PRICE FROM URL: " + fundPriceURL;
@@ -36,13 +36,13 @@ async function fetchPrice(fundPriceURL : string) {
   return fundPrice;
 }
 
-var delayRequest = () =>{
+const delayRequest = () =>{
   return new Promise(resolve => {
     setTimeout(resolve, 3000, "Done");
   });
 }
 
-async function updatePrice(){
+const updatePrice = async () => {
   try{
     let documents = await db.collection('funds').get();
     var docArray = documents.docs;
