@@ -1,6 +1,7 @@
 import admin = require('firebase-admin');
 import Koa = require('koa');
 import Router = require('koa-router');
+import cors = require('@koa/cors');
 
 const app = new Koa();
 const protectedRouter = new Router();
@@ -74,12 +75,13 @@ protectedRouter.get('/apis/getFund', async (ctx) => {
 });
 
 //apply middelwares
+app.use(cors());
 app.use(userMiddleware);
 app.use(dbconnMiddleware);
 app.use(protectedRouter.routes());
 app.use(protectedRouter.allowedMethods());
 
-app.listen(3000);
+app.listen(3001);
 
 
   
