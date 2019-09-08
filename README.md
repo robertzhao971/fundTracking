@@ -1,7 +1,9 @@
 
 # Fund Tracking Web App
 
-React directory cotains files used for front end, wrote in TypeScript.
+project website: fund.robertzhao.com
+
+React directory contains front end code, written with React and Redux.
 
 ## Application Server (Node.js)
 
